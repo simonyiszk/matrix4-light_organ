@@ -33,9 +33,9 @@ int main(int argc, char **argv) {
         
         fft.do_fft(fft_output.begin(), rec.getBuffer());
         
-        mely  = color::calc<sample_rate, 50,   100,  float, buffer_size, double>(fft_output);
-        kozep = color::calc<sample_rate, 200,  350,  float, buffer_size, double>(fft_output);
-        magas = color::calc<sample_rate, 2000, 4566, float, buffer_size, double>(fft_output);
+        mely  = color::calc<sample_rate, 50,   160,  float, buffer_size, double>(fft_output);
+        kozep = color::calc<sample_rate, 140,  350,  float, buffer_size, double>(fft_output);
+        magas = color::calc<sample_rate, 2000, 6000, float, buffer_size, double>(fft_output);
                 
         std::cout << mely << ' ' << kozep << ' ' << magas << ' ' << std::endl;
         
