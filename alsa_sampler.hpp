@@ -21,7 +21,8 @@ static std::string format_string(const char *fmt, ...) {
 
 
 template <unsigned numOfSamples> class alsa_sampler {
-    std::array<float, numOfSamples * 32 *2 / 8> buffer; // 32 = snd_pcm_format_width(SND_PCM_FORMAT_FLOAT)
+    std::array<float, numOfSamples*2> stereo_buffer;
+    std::array<float, numOfSamples> mono_buffer;
     snd_pcm_t *capture_handle;
     snd_pcm_hw_params_t *hw_params;
 
@@ -87,29 +88,26 @@ public:
     }
 
 
-    virtual ~alsa_sampler() {
+    ~alsa_sampler() {
         snd_pcm_close (capture_handle);
         std::cout << "audio interface closed" << std::endl;
     }
 
-    virtual void fillBuffer() {
+    void fillBuffer() {
         int err;
 
-        if ((err = snd_pcm_readi (capture_handle, buffer.begin(), numOfSamples)) != numOfSamples)
+        if ((err = snd_pcm_readi (capture_handle, stereo_buffer.begin(), numOfSamples)) != numOfSamples)
             throw std::runtime_error(format_string("read from audio interface failed (%s)\n", snd_strerror (err)));
 
-        for(int i=0; i<numOfSamples*2; i+=2) { //Converting stereo matrix to mono vector
-            buffer[i/2]=(buffer[i]+buffer[i-1])/2;
+        for(int i=1; i<numOfSamples*2; i+=2) { //Converting stereo matrix to mono vector
+            mono_buffer[i/2]=(stereo_buffer[i]+stereo_buffer[i-1])/2;
         }
     }
 
 
-    virtual float* getBuffer() {
-        return buffer.begin();
+    std::array<float, numOfSamples> getBuffer() {
+        return mono_buffer;
     }
 };
-
-
-//template <unsigned numOfSamples> const char alsa_sampler<numOfSamples>::default_device[] = "front:CARD=XFi,DEV=0";
 
 template <unsigned numOfSamples> const char alsa_sampler<numOfSamples>::default_device[] = "default";

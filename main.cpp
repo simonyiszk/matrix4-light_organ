@@ -2,6 +2,7 @@
 #include "alsa_sampler.hpp"
 #include "fft-real/ffft/FFTRealFixLen.h"
 #include "color.hpp"
+#include "hanning.hpp"
 #include "matrix4_display.h"
 
 constexpr const size_t buffer_size = 2048;
@@ -31,7 +32,13 @@ int main(int argc, char **argv) {
     while (1){
         rec.fillBuffer();
         
-        fft.do_fft(fft_output.begin(), rec.getBuffer());
+        std::array<float, buffer_size> samples = rec.getBuffer();
+        
+        for(size_t i=0;i<buffer_size;i++){
+            samples[i]*=hanning<float, buffer_size>()[i];
+        }
+        
+        fft.do_fft(fft_output.begin(), samples.begin());
         
         mely  = color::calc<sample_rate, 50,   160,  float, buffer_size, double>(fft_output);
         kozep = color::calc<sample_rate, 140,  350,  float, buffer_size, double>(fft_output);
