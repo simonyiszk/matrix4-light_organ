@@ -5,7 +5,7 @@
 #include "hanning.hpp"
 #include "matrix4_display.h"
 
-constexpr const size_t buffer_size = 2048;
+constexpr const size_t buffer_size = 1024;
 constexpr const unsigned int sample_rate = 44100;
 
 constexpr const unsigned mylog2(unsigned a){
@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
         kozep = color::calc<sample_rate, 140,  350,  float, buffer_size, double>(fft_output);
         magas = color::calc<sample_rate, 2000, 6000, float, buffer_size, double>(fft_output);
                 
-        std::cout << mely << ' ' << kozep << ' ' << magas << ' ' << std::endl;
+        //std::cout << mely << ' ' << kozep << ' ' << magas << ' ' << std::endl;
         
         m4d.send(0,uint8_t(mely*2.55),uint8_t(kozep*2.55),uint8_t(magas*2.55));
     }

@@ -6,12 +6,13 @@
 #include "virtual_charge_pump.hpp"
 
 namespace color{
-    constexpr const size_t under_trashhold_limit = 50;
+    constexpr const size_t under_trashhold_limit = 500;
+    constexpr const size_t upper_trashhold_limit = 50;
     
     template<unsigned int sample_rate, unsigned int start_freq, unsigned int stop_freq, typename input_type, unsigned int buffer_size, typename storage_type>
     const storage_type calc(std::array<input_type, buffer_size> ffft_mag_spectrum) {
         static normalizer<storage_type, input_type> normalized;
-        static virtual_charge_pump<storage_type, storage_type, 1> charge_pump(0.3);
+        static virtual_charge_pump<storage_type, storage_type, 1> charge_pump(0.6);
         static size_t                               under_trashhold_counter;
         static size_t                               above_trashhold_counter;
         
@@ -26,19 +27,19 @@ namespace color{
         signal_power=sqrt(signal_power); //Calculate value from power
         
         // Autoscale in case of turning the music down
-        /*if (signal_power < (normalized.getMax() - normalized.getMin())*0.2){
+        if (signal_power < (normalized.getMax() - normalized.getMin())*0.2){
             under_trashhold_counter++;
             if(under_trashhold_counter == under_trashhold_limit){
                 normalized.decrease_top();
             }
         } else {
             under_trashhold_counter=0;
-        }*/
+        }
         
         // Utóelnyomás TODO translate to english
         if (signal_power > (normalized.getMax() - normalized.getMin())*0.6){
             above_trashhold_counter++;
-            if(above_trashhold_counter == under_trashhold_limit){
+            if(above_trashhold_counter == upper_trashhold_limit){
                 normalized.increase_bottom();
             }
         } else {
