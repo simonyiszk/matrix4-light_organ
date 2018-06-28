@@ -12,7 +12,7 @@ namespace color{
     template<unsigned int sample_rate, unsigned int start_freq, unsigned int stop_freq, typename input_type, unsigned int buffer_size, typename storage_type>
     const storage_type calc(std::array<input_type, buffer_size> ffft_mag_spectrum) {
         static normalizer<storage_type, input_type> normalized;
-        static virtual_charge_pump<storage_type, storage_type, 1> charge_pump(0.6);
+        static virtual_charge_pump<storage_type, storage_type, 1> charge_pump(0.7);
         static size_t                               under_trashhold_counter;
         static size_t                               above_trashhold_counter;
         

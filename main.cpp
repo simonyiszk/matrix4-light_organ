@@ -27,7 +27,7 @@ int main(int argc, char **argv) {
     ffft::FFTRealFixLen<mylog2(buffer_size)> fft;
     std::array<float, buffer_size> fft_output;
     double mely, kozep, magas;
-    matrix4::matrix4_display m4d("10.152.104.67");
+    matrix4::matrix4_display m4d("10.152.105.226");
     
     while (1){
         rec.fillBuffer();
