@@ -111,3 +111,4 @@ public:
 };
 
 template <unsigned numOfSamples> const char alsa_sampler<numOfSamples>::default_device[] = "default";
+//template <unsigned numOfSamples> const char alsa_sampler<numOfSamples>::default_device[] = "front:CARD=XFi,DEV=0";

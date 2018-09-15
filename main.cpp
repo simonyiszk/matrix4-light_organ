@@ -27,7 +27,7 @@ int main(int argc, char **argv) {
     ffft::FFTRealFixLen<mylog2(buffer_size)> fft;
     std::array<float, buffer_size> fft_output;
     double mely, kozep, magas;
-    matrix4::matrix4_display m4d("10.152.105.226");
+    matrix4::matrix4_display m4d("192.168.0.101");
     
     while (1){
         rec.fillBuffer();
@@ -44,8 +44,6 @@ int main(int argc, char **argv) {
         kozep = color::calc<sample_rate, 140,  350,  float, buffer_size, double>(fft_output);
         magas = color::calc<sample_rate, 2000, 6000, float, buffer_size, double>(fft_output);
                 
-        //std::cout << mely << ' ' << kozep << ' ' << magas << ' ' << std::endl;
-        
         m4d.send(0,uint8_t(mely*2.55),uint8_t(kozep*2.55),uint8_t(magas*2.55));
     }
         
