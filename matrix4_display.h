@@ -23,6 +23,15 @@ class matrix4_display{
     struct sockaddr_in si_other;
     int s, slen=sizeof(si_other);
 public:
+    struct Pixel{
+      uint8_t red;
+      uint8_t green;
+      uint8_t blue;
+
+     Pixel() = delete;
+     Pixel(uint8_t r, uint8_t g, uint8_t b): red(r), green(g), blue(b) {}
+    };
+    
     matrix4_display(const char* ip_address){
         if ( (s=socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
         {
@@ -46,13 +55,20 @@ public:
     
     matrix4_display& operator=(const matrix4_display&) = delete;
     
-    void send(uint8_t w, uint8_t r, uint8_t g, uint8_t b){
-        for(uint8_t i = 0; i <4; i++){
-            uint8_t message[]= {w, i, r, g, b};
-            
-            //send the message
-            if (sendto(s, message, 5, 0 , (struct sockaddr *) &si_other, slen)==-1)
+    enum side : uint8_t{
+      left = 0, // TODO check
+      right = 1
+    };
+    
+    void setPixel(side s, uint8_t pixel, Pixel p){
+        uint8_t message[]= {s, pixel, p.red, p.green, p.blue};
+        if (sendto(s, message, 5, 0 , (struct sockaddr *) &si_other, slen)==-1)
                 throw std::runtime_error("sendto");
+    }
+    
+    void setWindow(side s, Pixel p){
+        for(uint8_t i = 0; i <4; i++){
+            setPixel(s, i, p);
         }
     }
     
